@@ -6,11 +6,15 @@ import { RouterProvider } from "react-router-dom";
 
 const queryClient = new QueryClient();
 
+// Acode modification access
+
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
         <RouterProvider router={route} />
         <ReactQueryDevtools initialIsOpen={false} />
+        
+        
     </QueryClientProvider>
   );
 }
