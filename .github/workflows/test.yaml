@@ -48,12 +48,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: 'Se han realizado cambios en este PR. Por favor, revisen.'
-            })
-
-              body: 'Se han realizado cambios en este PR. Por favor, revisen.'
-            })    
-
-
+            }) 
 
   notify-on-success:
     runs-on: ubuntu-latest
