@@ -14,6 +14,9 @@ export default defineConfig({
       registerType: "autoUpdate",
       injectRegister: 'script-defer',
       includeAssets: ["logo.ico", "logo.png", "logo.svg"],
+      workbox: {
+        swDest: "sw.js"
+      },
       manifest: {
         name: "Softion Pro",
         short_name: "Softion Pro",
