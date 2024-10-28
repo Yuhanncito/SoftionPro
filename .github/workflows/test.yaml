@@ -49,7 +49,12 @@ jobs:
               repo: context.repo.repo,
               body: 'Se han realizado cambios en este PR. Por favor, revisen.'
             })
-            
+
+              body: 'Se han realizado cambios en este PR. Por favor, revisen.'
+            })    
+
+
+
   notify-on-success:
     runs-on: ubuntu-latest
     needs: [setup]
@@ -57,12 +62,18 @@ jobs:
     steps:
       # Enviamos un correo electrónico a mi cuenta
       - name: Notificar Exito
-        uses: softprops/gmail@v1
+        uses: dawidd6/action-send-mail@v3
         with:
-          from: ${{ secrets.GMAIL_ADDRESS }}
-          to: ${{ secrets.GMAIL_ADDRESS_RECIPIENT }}
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.GMAIL_ADDRESS }}
+          password: ${{ secrets.GMAIL_APP_PASSWORD }}
           subject: El repositorio ha pasado las pruebas correctamente.
           body: El repositorio ha superado las pruebas correctamente. Puedes ver los detalles en https://github.com/${{ github.repository }}/actions?query=workflow%3A${{ github.workflow }}+event%3A${{ github.event_name }}
+          to: ${{ secrets.GMAIL_ADDRESS_RECIPIENT }}
+          from: ${{ secrets.GMAIL_ADDRESS }}
+
+          
   notify-on-failure:
     runs-on: ubuntu-latest
     needs: [setup]
@@ -70,9 +81,14 @@ jobs:
     steps:
       # Enviamos un correo electrónico a mi cuenta
       - name: Notificar Error
-        uses: softprops/gmail@v1
+        uses: dawidd6/action-send-mail@v3
         with:
-          from: ${{ secrets.GMAIL_ADDRESS }}
-          to: ${{ secrets.GMAIL_ADDRESS_RECIPIENT }}
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.GMAIL_ADDRESS }}
+          password: ${{ secrets.GMAIL_APP_PASSWORD }}
           subject: El repositorio ha fallado en las pruebas.
           body: El repositorio ha fallado en las pruebas. Puedes ver los detalles en https://github.com/${{ github.repository }}/actions?query=workflow%3A${{ github.workflow }}+event%3A${{ github.event_name }}
+          to: ${{ secrets.GMAIL_ADDRESS_RECIPIENT }}
+          from: ${{ secrets.GMAIL_ADDRESS }}
+  
