@@ -181,7 +181,7 @@ function TaskView() {
   return (
     <div className=" w-full h-full">
       {
-        isLoadingProjects ? <LoadingMolecule /> : <><div className="flex justify-center items-center h-20 w-full">
+        (isLoadingProjects || isLoading) ? <LoadingMolecule /> : <><div className="flex justify-center items-center h-20 w-full">
         <div className="flex w-2/6 items-center px-10">
           <CiFolderOn className="w-10 h-10 mr-2" />
           <SubTitle text={data.data.nameProject} />

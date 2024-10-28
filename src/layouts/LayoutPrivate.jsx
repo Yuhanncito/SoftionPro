@@ -11,8 +11,8 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import { getUserData, getWorkSpaces, getInvitations, acceptInvitation } from "../api";
 import Swal from "sweetalert2";
-
 function LayoutPrivate() {
+   
   const {
     email,
     setWorkspaces,
@@ -29,22 +29,31 @@ function LayoutPrivate() {
 
   const token = cookie.get("x-access-user");
 
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient({
+  });
 
   const {
     data: userToken,
     isLoading,
-    isError,
-    error,
+    isError: isErrorUser,
+    error: errorUser,
   } = useQuery({
     queryKey: ["userData"],
     queryFn: () => getUserData(token),
     onSuccess: (data) => {
       setUser(data);
       console.log("user", data);
+      if (!data  || data.message) {
+        redirectPage("/login");
+        cookie.remove("x-access-user");
+      }
     },
     onError: (error) => {
-      console.log(error);
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "No token Provider",
+      })
     },
   });
 
@@ -59,7 +68,7 @@ function LayoutPrivate() {
     },
   });
 
-  const { data: invitations } = useQuery({
+  const { data: invitations, isLoading: isLoadingInvitations, isSuccess: isSuccessInvitations } = useQuery({
     queryKey: ["invitations"],
     queryFn: () => getInvitations(userToken.user._id, token),
     onSuccess: (data) => {
@@ -123,6 +132,7 @@ const acceptMutation = useMutation({
     mutationFn: async (id) => await acceptInvitation(id,token),
     onSuccess: async (data) => {
         await queryClient.invalidateQueries(["invitations"])
+        await queryClient.invalidateQueries(["workspaces"])
     }
 })
 
@@ -130,10 +140,15 @@ const handleAceptInvitation = async (notification) => {
     await acceptMutation.mutateAsync(notification)  
 }
 
+const handleDestroy = () => {
+    cookie.remove("x-access-user");
+    redirectPage("/");
+};
+
   return token ?  (
     (isLoadingWorkspaces || isLoading) ? (
       <LoadingMolecule />
-    ) : (
+    ) :  (
       <div
         className={` transition-all duration-1000 w-screen h-screen flex flex-row ${
           Theme ? "bg-gray-900 text-white" : " bg-slate-50"
@@ -182,7 +197,7 @@ const handleAceptInvitation = async (notification) => {
                           Notificaciones
                         </p>
 
-                        {invitations && invitations.invitations.length > 0
+                        {invitations &&  isLoadingInvitations && isSuccessInvitations && invitations.invitations && invitations.invitations.length > 0
                           ? invitations.invitations
                               .slice(0, 5)
                               .map((invitation) => (

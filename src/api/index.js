@@ -3,13 +3,14 @@ const BASEURL2 = 'https://softion-api-v3.vercel.app/api'
 const BASEURL1 = 'http://srv554337.hstgr.cloud:4000/api'
 const BASEURL = 'http://localhost:4000/api'
 
+export default BASEURL;
 
 export const RegisterFunction = async (data) => {
     try {
         const response = await fetch(`${BASEURL}/auth/signup`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
             },
             body: JSON.stringify(data)
         })
@@ -21,14 +22,17 @@ export const RegisterFunction = async (data) => {
 }
 export const LoginFunction = async (data) => {
     try {
+        const sesionNotis = localStorage.getItem('subscription')
         const response = await fetch(`${BASEURL}/auth/signin`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'x-access-notification': sesionNotis
             },
             body: JSON.stringify(data)
         })
         const result = await response.json()
+        console.log(sesionNotis);
         return result
     } catch (error) {
         console.log(error)
@@ -36,11 +40,13 @@ export const LoginFunction = async (data) => {
 }
 export const VerifyEmail = async (data) => {
     try {
+        const sesionNotis = localStorage.getItem('subscription')
         const action = (data.option === "register")?'signup':(data.option==="Login")?'signin':'forgotPassword'
         const response = await fetch(`${BASEURL}/auth/${action}/confirm`, {
             method: 'POST',
             headers: {  
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'x-access-notification': sesionNotis,
             },
             body: JSON.stringify(data)
         })
