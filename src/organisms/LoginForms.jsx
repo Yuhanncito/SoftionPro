@@ -2,56 +2,75 @@ import { Title, SubTitle, Text } from "../atoms/TextsGlobal";
 import { FormsImputs } from "../molecules/FormsImputs";
 import { Buttons, Redirect } from "../atoms/FormularyItems";
 import { useNavigate } from "react-router-dom";
-import {LoadingMolecule} from '../molecules/LoadingMolecule'
+import { LoadingMolecule } from "../molecules/LoadingMolecule";
 
-export function LoginForms({ onSubmit, onChange, validate, errors, onPressed }) {
-  return (
-    onPressed ? <LoadingMolecule /> : <div className="bg-white px-10 py-20 md:w-[600px] rounded-3xl shadow-xl border-2 border-gray-100">
-    <Title text="Bienvenido a" />
-    <SubTitle text="Softion Pro" />
-    <div className="mt-8">
-      <form onSubmit={onSubmit}>
-        <FormsImputs
-          type={"email"}
-          label="Email"
-          text="Ingresa tu Email"
-          onChange={onChange}
-          id="email"
-          validate={validate}
-        />
-        {
-          errors.email && <p className="text-red-500">{errors.email.message}</p>
-        }
-        <FormsImputs
-          type={"password"}
-          label="Password"
-          text="Ingresa tu Password"
-          onChange={onChange}
-          id="password"
-          validate={validate}
-        />
-        {
-          errors.password && <p className="text-red-500">{errors.password.message}</p>
-        }
-        <div className="flex justify-between items-center mt-5">
-          <Redirect
-            text="¿Olvidaste tu Contraseña?"
-            route="/reset-password"
+export function LoginForms({
+  onSubmit,
+  onChange,
+  validate,
+  errors,
+  onPressed,
+}) {
+  return onPressed ? (
+    <LoadingMolecule />
+  ) : (
+    <div className="bg-white px-10 py-14 md:w-[600px] rounded-3xl shadow-xl border-2 border-gray-100">
+      <div className=" flex w-full items-center md:flex-row flex-col">
+        <img src="/Logo.svg" alt="" className=" w-20 mr-4" />
+        <div className="w-full md:mt-0 mt-2">
+          <Title text="Bienvenido a" />
+          <SubTitle text="Softion Pro" />
+         
+        </div>
+      </div>
+      <div className="mt-8">
+        <form onSubmit={onSubmit}>
+          <FormsImputs
+            type={"email"}
+            label="Email"
+            text="Ingresa tu Email"
+            onChange={onChange}
+            id="email"
+            validate={validate}
           />
-        </div>
-        <div className="flex justify-center items-center mt-5 w-full">
-          <Redirect text="¿No tienes una cuenta?" route="/register" />
-        </div>
-       
-        <Buttons text="Iniciar Sesion" />
-      </form>
+          {errors.email && (
+            <p className="text-red-500">{errors.email.message}</p>
+          )}
+          <FormsImputs
+            type={"password"}
+            label="Password"
+            text="Ingresa tu Password"
+            onChange={onChange}
+            id="password"
+            validate={validate}
+          />
+          {errors.password && (
+            <p className="text-red-500">{errors.password.message}</p>
+          )}
+          <div className="flex justify-between items-center mt-5">
+            <Redirect
+              text="¿Olvidaste tu Contraseña?"
+              route="/reset-password"
+            />
+          </div>
+          <div className="flex justify-center items-center mt-5 w-full">
+            <Redirect text="¿No tienes una cuenta?" route="/register" />
+          </div>
+
+          <Buttons text="Iniciar Sesion" />
+        </form>
+      </div>
     </div>
-  </div>
   );
 }
 
-export const RegisterForm = ({ onSubmit, onChange, validate, errors, user }) => {
-
+export const RegisterForm = ({
+  onSubmit,
+  onChange,
+  validate,
+  errors,
+  user,
+}) => {
   const navigate = useNavigate();
 
   const options = [
@@ -94,9 +113,9 @@ export const RegisterForm = ({ onSubmit, onChange, validate, errors, user }) => 
           id="name"
           validate={validate}
         />
-        {
-          errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>
-        }
+        {errors.name && (
+          <p className="text-red-500 text-sm">{errors.name.message}</p>
+        )}
 
         <FormsImputs
           type="text"
@@ -106,9 +125,9 @@ export const RegisterForm = ({ onSubmit, onChange, validate, errors, user }) => 
           id="lastName"
           validate={validate}
         />
-        {
-          errors.lastName && <p className="text-red-500 text-sm">{errors.lastName.message}</p>
-        }
+        {errors.lastName && (
+          <p className="text-red-500 text-sm">{errors.lastName.message}</p>
+        )}
 
         <FormsImputs
           type="email"
@@ -118,9 +137,9 @@ export const RegisterForm = ({ onSubmit, onChange, validate, errors, user }) => 
           id="email"
           validate={validate}
         />
-        {
-          errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>
-        }
+        {errors.email && (
+          <p className="text-red-500 text-sm">{errors.email.message}</p>
+        )}
         <FormsImputs
           type="password"
           label="Contraseña"
@@ -129,9 +148,9 @@ export const RegisterForm = ({ onSubmit, onChange, validate, errors, user }) => 
           id="password"
           validate={validate}
         />
-        {
-          errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>
-        }
+        {errors.password && (
+          <p className="text-red-500 text-sm">{errors.password.message}</p>
+        )}
         <FormsImputs
           type="password"
           label="Confirmar contraseña"
@@ -140,9 +159,9 @@ export const RegisterForm = ({ onSubmit, onChange, validate, errors, user }) => 
           id="password2"
           validate={validate}
         />
-        {
-          errors.password2 && <p className="text-red-500 text-sm">{errors.password2.message}</p>
-        }
+        {errors.password2 && (
+          <p className="text-red-500 text-sm">{errors.password2.message}</p>
+        )}
         <FormsImputs
           type="select"
           label="Pregunta Secreta"
@@ -152,9 +171,9 @@ export const RegisterForm = ({ onSubmit, onChange, validate, errors, user }) => 
           options={options}
           validate={validate}
         />
-        {
-          errors.question && <p className="text-red-500 text-sm">{errors.question.message}</p>
-        }
+        {errors.question && (
+          <p className="text-red-500 text-sm">{errors.question.message}</p>
+        )}
         <FormsImputs
           type="text"
           label="Respuesta"
@@ -163,20 +182,22 @@ export const RegisterForm = ({ onSubmit, onChange, validate, errors, user }) => 
           id="respuestaSecreta"
           validate={validate}
         />
-        {
-          errors.answer && <p className="text-red-500 text-sm">{errors.answer.message}</p>
-        }
+        {errors.answer && (
+          <p className="text-red-500 text-sm">{errors.answer.message}</p>
+        )}
 
-        <FormsImputs 
+        <FormsImputs
           type="checkbox"
           text="Terminos y politas de privacidad"
           onChange={onChange}
           id="captcha"
           validate={validate}
-          navigate={() => navigate('/privacy-policies')}
+          navigate={() => navigate("/privacy-policies")}
         />
 
-        { errors.captcha && <p className="text-red-500 text-sm">{errors.captcha.message}</p> }
+        {errors.captcha && (
+          <p className="text-red-500 text-sm">{errors.captcha.message}</p>
+        )}
 
         <Buttons text="Registrarse" />
         <Redirect text="Ya tengo cuenta" route="/" />
@@ -185,7 +206,13 @@ export const RegisterForm = ({ onSubmit, onChange, validate, errors, user }) => 
   );
 };
 
-export const ResetPassword = ({ onSubmit, onChange, validate, errors, user }) => {
+export const ResetPassword = ({
+  onSubmit,
+  onChange,
+  validate,
+  errors,
+  user,
+}) => {
   const options = [
     {
       value: "default",
@@ -198,7 +225,7 @@ export const ResetPassword = ({ onSubmit, onChange, validate, errors, user }) =>
     {
       value: "question",
       text: "Recuperacion por Pregunta Secreta",
-    }
+    },
   ];
   return (
     <div className="w-full h-full flex items-center justify-center">
@@ -220,9 +247,9 @@ export const ResetPassword = ({ onSubmit, onChange, validate, errors, user }) =>
           id="email"
           validate={validate}
         />
-        {
-          errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>
-        }
+        {errors.email && (
+          <p className="text-red-500 text-sm">{errors.email.message}</p>
+        )}
         <FormsImputs
           type="select"
           label="Recuperacion"
@@ -232,9 +259,9 @@ export const ResetPassword = ({ onSubmit, onChange, validate, errors, user }) =>
           options={options}
           validate={validate}
         />
-        {
-          errors.recuperacion && <p className="text-red-500 text-sm">{errors.recuperacion.message}</p>
-        }
+        {errors.recuperacion && (
+          <p className="text-red-500 text-sm">{errors.recuperacion.message}</p>
+        )}
         <Buttons text="Recuperar contraseña" />
         <Redirect text="Volver al Inicio de sesion" route="/" />
       </form>
@@ -242,35 +269,60 @@ export const ResetPassword = ({ onSubmit, onChange, validate, errors, user }) =>
   );
 };
 
-export const VerifyEmail = ({ user, onSubmit, onChange, validate, errors, isMessage, message, onPressed }) => {
-  return (
-    onPressed ? <LoadingMolecule /> :<div className="w-full h-full flex items-center justify-center">
-    <form onSubmit={onSubmit} className="w-[70%] max-sm:w-[90%] max-sm:h-[80%] h-[70%] flex rounded-xl shadow-2xl bg-white max-sm:px-5 px-16 py-10 flex-col items-center justify-center">
-      <div className="w-full mb-3">
-        <Title text="Token de verificación" />
-      </div>
-      <div className="w-full mb-2">
-        <Text text={isMessage? (message!=='ok')? message + " en su bandeja de entrada":"Se ah enviado un token a su correo electronico" :''} />
-      </div>
-      <FormsImputs
-        type="text"
-        label="Ingresa el token enviado al correo"
-        text="Ejemplo: 123sdf56"
-        onChange={onChange}
-        id="secretCode"
-        validate={validate}
-      />
-      <Buttons text="Verificar correo" />
-      <Redirect text="Volver al Inicio de sesion" route="/" />
-    </form>
-  </div>
+export const VerifyEmail = ({
+  user,
+  onSubmit,
+  onChange,
+  validate,
+  errors,
+  isMessage,
+  message,
+  onPressed,
+}) => {
+  return onPressed ? (
+    <LoadingMolecule />
+  ) : (
+    <div className="w-full h-full flex items-center justify-center">
+      <form
+        onSubmit={onSubmit}
+        className="w-[70%] max-sm:w-[90%] max-sm:h-[80%] h-[70%] flex rounded-xl shadow-2xl bg-white max-sm:px-5 px-16 py-10 flex-col items-center justify-center"
+      >
+        <div className="w-full mb-3">
+          <Title text="Token de verificación" />
+        </div>
+        <div className="w-full mb-2">
+          <Text
+            text={
+              isMessage
+                ? message !== "ok"
+                  ? message + " en su bandeja de entrada"
+                  : "Se ah enviado un token a su correo electronico"
+                : ""
+            }
+          />
+        </div>
+        <FormsImputs
+          type="text"
+          label="Ingresa el token enviado al correo"
+          text="Ejemplo: 123sdf56"
+          onChange={onChange}
+          id="secretCode"
+          validate={validate}
+        />
+        <Buttons text="Verificar correo" />
+        <Redirect text="Volver al Inicio de sesion" route="/" />
+      </form>
+    </div>
   );
 };
 
 export const RestorePassword = ({ onSubmit, onChange, validate, errors }) => {
   return (
     <div className="w-full h-full flex items-center justify-center">
-      <form onSubmit={onSubmit} className="w-[70%] max-sm:w-[90%] max-sm:h-[80%] h-[70%] flex rounded-xl shadow-2xl bg-white max-sm:px-5 px-16 py-10 flex-col items-center justify-center">
+      <form
+        onSubmit={onSubmit}
+        className="w-[70%] max-sm:w-[90%] max-sm:h-[80%] h-[70%] flex rounded-xl shadow-2xl bg-white max-sm:px-5 px-16 py-10 flex-col items-center justify-center"
+      >
         <div className="w-full mb-3">
           <Title text="Restablecer contraseña" />
         </div>
@@ -285,9 +337,9 @@ export const RestorePassword = ({ onSubmit, onChange, validate, errors }) => {
           id="password"
           validate={validate}
         />
-        {
-          errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>
-        }
+        {errors.password && (
+          <p className="text-red-500 text-sm">{errors.password.message}</p>
+        )}
         <FormsImputs
           type="password"
           label="Confirmar contraseña"
@@ -296,20 +348,31 @@ export const RestorePassword = ({ onSubmit, onChange, validate, errors }) => {
           id="confirmPassword"
           validate={validate}
         />
-        {
-          errors.confirmPassword && <p className="text-red-500 text-sm">{errors.confirmPassword.message}</p>
-        }
+        {errors.confirmPassword && (
+          <p className="text-red-500 text-sm">
+            {errors.confirmPassword.message}
+          </p>
+        )}
         <Buttons text="Restablecer contraseña" />
         <Redirect text="Volver al Inicio de sesion" route="/" />
       </form>
     </div>
   );
-}
+};
 
-export const VerifyQuestion = ({ user, onSubmit, onChange, validate, errors }) => {
+export const VerifyQuestion = ({
+  user,
+  onSubmit,
+  onChange,
+  validate,
+  errors,
+}) => {
   return (
     <div className="w-full h-full flex items-center justify-center">
-      <form onSubmit={onSubmit} className="w-[70%] max-sm:w-[90%] max-sm:h-[80%] h-[70%] flex rounded-xl shadow-2xl bg-white max-sm:px-5 px-16 py-10 flex-col items-center justify-center">
+      <form
+        onSubmit={onSubmit}
+        className="w-[70%] max-sm:w-[90%] max-sm:h-[80%] h-[70%] flex rounded-xl shadow-2xl bg-white max-sm:px-5 px-16 py-10 flex-col items-center justify-center"
+      >
         <div className="w-full mb-3">
           <Title text="Verificar pregunta" />
         </div>
@@ -327,12 +390,12 @@ export const VerifyQuestion = ({ user, onSubmit, onChange, validate, errors }) =
           id="answer"
           validate={validate}
         />
-        {
-          errors.answer && <p className="text-red-500 text-sm">{errors.answer.message}</p>
-        }
+        {errors.answer && (
+          <p className="text-red-500 text-sm">{errors.answer.message}</p>
+        )}
         <Buttons text="Verificar respuesta" />
         <Redirect text="Volver al Inicio de sesion" route="/" />
       </form>
     </div>
   );
-}
+};
