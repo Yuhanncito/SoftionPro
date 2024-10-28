@@ -1,0 +1,41 @@
+name: SoftionPro PWA CI/CD Workflow
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - feature/*
+      - hotfix/*
+  pull_request:
+    branches:
+      - main
+      - develop
+      - feature/*
+      - hotfix/*
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      # Obtenemos el código fuente del repositorio
+      - name: Checkout Código
+        uses: actions/checkout@v4.2.1
+      # Configuramos el entorno de Node.js
+      - name: Configurar Node.js
+        uses: actions/setup-node@v2
+        with:
+          # Versión de Node.js
+          node-version: '14'
+      # Instalamos las dependencias definidas en package.json
+      - name: Instalar Dependencias
+        run: npm install
+      # Cachear los módulos instalados para evitar volver a instalarlos
+      # en futuras ejecuciones
+      - name: Configurar Caché
+        uses: actions/cache@v2
+        with:
+          # Ruta del directorio que se va a cachear
+          path: ~/.npm
+          # Llave única para identificar el caché
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+
