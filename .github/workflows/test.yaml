@@ -54,6 +54,33 @@ jobs:
               repo: context.repo.repo,
               body: 'Se han realizado cambios en este PR. Por favor, revisen.'
             })
+
+  test:
+    runs-on: ubuntu-latest
+    needs: [setup]
+    steps:
+      # Obtenemos el código fuente del repositorio
+      - name: Checkout Código
+        uses: actions/checkout@v4.2.1
+      # Configuramos el entorno de Node.js
+      - name: Configurar Node.js
+        uses: actions/setup-node@v2
+        with:
+          # Versión de Node.js
+          node-version: '14'
+      # Instalamos las dependencias definidas en package.json
+      - name: Instalar Dependencias
+        run: npm install
+        run: npm install -g testcafe
+      # Cachear los módulos instalados para evitar volver a instalarlos
+        
+      # en futuras ejecuciones
+      - name: Configurar Caché
+        uses: actions/cache@v2
+
+      # Ejecutamos las pruebas
+      - name: Ejecutar Pruebas
+        run: npm run test
             
   notify-on-success:
     runs-on: ubuntu-latest
