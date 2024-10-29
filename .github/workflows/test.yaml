@@ -71,9 +71,12 @@ jobs:
       # Instalamos las dependencias definidas en package.json
       - name: Instalar Dependencias
         run: npm install
+      
+      # Intalamos las dependencias para las pruebas con TestCafe
+      - name: Instalar Dependencias para TestCafe
         run: npm install -g testcafe
       # Cachear los módulos instalados para evitar volver a instalarlos
-        
+
       # en futuras ejecuciones
       - name: Configurar Caché
         uses: actions/cache@v2
