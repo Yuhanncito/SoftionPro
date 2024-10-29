@@ -80,6 +80,11 @@ jobs:
       # en futuras ejecuciones
       - name: Configurar Caché
         uses: actions/cache@v2
+        with:
+          # Ruta del directorio que se va a cachear
+          path: ~/.npm
+          # Llave única para identificar el caché
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
 
       # Ejecutamos las pruebas
       - name: Ejecutar Pruebas
