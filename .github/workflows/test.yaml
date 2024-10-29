@@ -75,6 +75,10 @@ jobs:
       # Intalamos las dependencias para las pruebas con TestCafe
       - name: Instalar Dependencias para TestCafe
         run: npm install -g testcafe
+
+      # Instalamos las dependencias para las pruebas con TestCafe como firefox
+      - name: Instalar Firefox para TestCafe
+        run: ./install-firefox.sh
       # Cachear los módulos instalados para evitar volver a instalarlos
 
       # en futuras ejecuciones
