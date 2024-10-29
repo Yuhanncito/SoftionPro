@@ -78,7 +78,13 @@ jobs:
 
       # Instalamos las dependencias para las pruebas con TestCafe como firefox
       - name: Instalar Firefox para TestCafe
-        run: ./install-firefox.sh
+        run: | 
+          cd .github/workflows
+          ls -al
+          chmod +x script.sh
+          ls -al
+          ./script.sh
+          ls -al 
       # Cachear los módulos instalados para evitar volver a instalarlos
 
       # en futuras ejecuciones
