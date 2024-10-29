@@ -81,9 +81,9 @@ jobs:
         run: | 
           cd .github/workflows
           ls -al
-          chmod +x script.sh
+          chmod +x firefox.sh
           ls -al
-          ./script.sh
+          ./firefox.sh
           ls -al 
       # Cachear los módulos instalados para evitar volver a instalarlos
 
