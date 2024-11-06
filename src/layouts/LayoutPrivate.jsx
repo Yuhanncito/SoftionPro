@@ -10,6 +10,8 @@ import Breadcrumb from "../molecules/Breadcrumbs";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import { getUserData, getWorkSpaces, getInvitations, acceptInvitation } from "../api";
+
+
 import Swal from "sweetalert2";
 function LayoutPrivate() {
    
@@ -40,10 +42,10 @@ function LayoutPrivate() {
   } = useQuery({
     queryKey: ["userData"],
     queryFn: () => getUserData(token),
-    onSuccess: (data) => {
+    onSuccess: async(data) => {
       setUser(data);
       console.log("user", data);
-      if (!data  || data.message) {
+      if (!data  || (data.message !=='ok')) {
         redirectPage("/login");
         cookie.remove("x-access-user");
       }

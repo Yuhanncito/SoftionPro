@@ -57,6 +57,7 @@ function LoginPage() {
       setAction("Login");
       redirectPage("/verify-email");
     } else {
+      setPressed(false)
       Swal.fire({
         title: "Error",
         text: res.message,
@@ -64,7 +65,6 @@ function LoginPage() {
         confirmButtonText: "Continuar",
         confirmButtonColor: "#3b82f6",
       });
-      setPressed(false)
     }
   };
   return (

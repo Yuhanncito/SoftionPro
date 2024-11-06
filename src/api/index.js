@@ -421,3 +421,24 @@ export const updatePassword = async (user, data) => {
         return {}
     }
 }  
+
+export const uploadProfileImagen = async (user, base64String) => {
+    try {
+        const response = await fetch(BASEURL+'/auth/update/', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-access-token': user
+          },
+          body: JSON.stringify({ imagen: base64String })
+        });
+        const data = await response.json();
+        console.log(data);
+        
+        return data.status === 'ok' ?  { success: true, url: data.public_id } : { success: false, url: null };
+
+      } catch (error) {
+        console.log(error);
+        return { success: false, url: null };
+      }
+}

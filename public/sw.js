@@ -20,23 +20,26 @@ if (!self.define) {
   let nextDefineUri;
 
   const singleRequire = (uri, parentUri) => {
+    console.log('ruta del no se que', uri);
     uri = new URL(uri + ".js", parentUri).href;
     return registry[uri] || (
-      
-        new Promise(resolve => {
-          if ("document" in self) {
-            const script = document.createElement("script");
-            script.src = uri;
-            script.onload = resolve;
-            document.head.appendChild(script);
-          } else {
-            nextDefineUri = uri;
+      new Promise((resolve, reject) => {
+        if ("document" in self) {
+          const script = document.createElement("script");
+          script.src = uri;
+          script.onload = resolve;
+          script.onerror = () => reject(new Error(`Failed to load script ${uri}`));
+          document.head.appendChild(script);
+        } else {
+          nextDefineUri = uri;
+          try {
             importScripts(uri);
             resolve();
+          } catch (e) {
+            reject(new Error(`Failed to import script ${uri}: ${e.message}`));
           }
-        })
-      
-      .then(() => {
+        }
+      }).then(() => {
         let promise = registry[uri];
         if (!promise) {
           throw new Error(`Module ${uri} didn’t register its module`);
@@ -45,6 +48,7 @@ if (!self.define) {
       })
     );
   };
+  
 
   self.define = (depsNames, factory) => {
     const uri = nextDefineUri || ("document" in self ? document.currentScript.src : "") || location.href;
@@ -97,3 +101,96 @@ self.addEventListener('push', event => {
     body: data.body,
   });
 });
+
+self.addEventListener('activate', (event) => {
+  console.log('Service Worker activated');
+  event.waitUntil(
+    self.clients.claim().then(() => {
+      return self.clients.matchAll({ type: 'window' }).then(clients => {
+        for (const client of clients) {
+          client.postMessage({ type: 'SW_ACTIVATED', message: 'El Service Worker ha sido activado. Por favor, recarga la página para habilitar las notificaciones push.' });
+        }
+      });
+    })
+  );
+});
+
+define(["./workbox-24713d30"], function (e) {
+  "use strict";
+  self.addEventListener("message", (e) => {
+    e.data && "SKIP_WAITING" === e.data.type && self.skipWaiting();
+  }),
+    e.precacheAndRoute(
+      [
+        { url: "assets/index-BVnd5nOE.js", revision: null },
+        { url: "assets/index-CR4B3lXP.css", revision: null },
+        {
+          url: "ganttStyles/frappe-gantt.css",
+          revision: "bc99845dcf6fa810d2c544ee22dbe25b",
+        },
+        {
+          url: "ganttStyles/frappe-gantt.js",
+          revision: "3dea4cdeb1649a13ad7b13df9ee8929b",
+        },
+        {
+          url: "ganttStyles/frappe-gantt.min.css",
+          revision: "fef88de645caec679ec2c8602388edcd",
+        },
+        {
+          url: "ganttStyles/frappe-gantt.min.js",
+          revision: "927e1926c2c08a5c5eb6fbddd5a25eef",
+        },
+        { url: "index.html", revision: "f41119dd11d94a67f9ea0107d252dee8" },
+        { url: "registerSW.js", revision: "38029a23452a6e3583df51cae68cc40b" },
+        {
+          url: "service-worker.js",
+          revision: "e9104e72783ba8667fa411ad5ac165b8",
+        },
+        { url: "sw.js", revision: "d1281a262b415e742b9f65b5f8bb2da6" },
+        {
+          url: "images/logo.png",
+          revision: "4f5f6a22be3fa16afeec064ee57adcb5",
+        },
+        {
+          url: "images/logo_192x192.png",
+          revision: "2aab3b1fff6535f6faf6c91ac83bfedd",
+        },
+        {
+          url: "images/logo_512x512.png",
+          revision: "4c3776fe8d98bf6479315bf68e661ad5",
+        },
+        {
+          url: "manifest.webmanifest",
+          revision: "3b27294350b8769528dbef960e524f68",
+        },
+      ],
+      {}
+    ),
+    e.cleanupOutdatedCaches(),
+    e.registerRoute(
+      new e.NavigationRoute(e.createHandlerBoundToURL("index.html"))
+    ),
+    e.registerRoute(
+      ({ request: e }) => "image" === e.destination,
+      new e.CacheFirst({
+        cacheName: "images-cache",
+        plugins: [
+          new e.ExpirationPlugin({ maxEntries: 50, maxAgeSeconds: 2592e3 }),
+        ],
+      }),
+      "GET"
+    ),
+    e.registerRoute(
+      ({ request: e }) =>
+        "script" === e.destination || "style" === e.destination,
+      new e.StaleWhileRevalidate({
+        cacheName: "static-resources",
+        plugins: [
+          new e.ExpirationPlugin({ maxEntries: 30, maxAgeSeconds: 86400 }),
+        ],
+      }),
+      "GET"
+    );
+});
+
+

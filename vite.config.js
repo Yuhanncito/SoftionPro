@@ -1,21 +1,74 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react-swc'
-import { VitePWA } from 'vite-plugin-pwa'
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react-swc";
+import { VitePWA } from "vite-plugin-pwa";
 
 // https://vitejs.dev/config/
+
 export default defineConfig({
   plugins: [
     react(),
     VitePWA({
+      strategies:'injectManifest',
+      srcDir:'src',
+      filename: 'sw.js',
       devOptions: {
         enabled: true,
-        
+        type: "module",
       },
       registerType: "autoUpdate",
-      injectRegister: 'script-defer',
+      injectRegister: "script-defer",
       includeAssets: ["logo.ico", "logo.png", "logo.svg"],
       workbox: {
-        swDest: "sw.js"
+        swDest: "public/sw.js",
+        swSrc: 'src/sw.js',
+        runtimeCaching: [
+          {
+            urlPattern: ({ request }) => request.destination === "image",
+            handler: "CacheFirst",
+            options: {
+              cacheName: "image-cache",
+              expiration: {
+                maxEntries: 10,
+                maxAgeSeconds: 30 * 24 * 60 * 60, // 30 días
+              },
+            },
+          },
+          {
+            urlPattern: ({ request }) => request.destination === "script",
+            handler: "NetworkFirst",
+            options: {
+              cacheName: "script-cache",
+              networkTimeoutSeconds: 10,
+              expiration: {
+                maxEntries: 10,
+                maxAgeSeconds: 30 * 24 * 60 * 60, // 30 días
+              },
+            },
+          },
+          {
+            urlPattern: ({ request }) => request.destination === "style",
+            handler: "StaleWhileRevalidate",
+            options: {
+              cacheName: "style-cache",
+              expiration: {
+                maxEntries: 10,
+                maxAgeSeconds: 30 * 24 * 60 * 60, // 30 días
+              },
+            },
+          },
+          {
+            urlPattern: /\/api\//,
+            handler: "NetworkFirst",
+            options: {
+              cacheName: "api-cache",
+              networkTimeoutSeconds: 10,
+              expiration: {
+                maxEntries: 10,
+                maxAgeSeconds: 30 * 24 * 60 * 60, // 30 días
+              },
+            },
+          },
+        ],
       },
       manifest: {
         name: "Softion Pro",
@@ -39,7 +92,7 @@ export default defineConfig({
             src: "images/logo.png",
             sizes: "256x248",
             type: "image/png",
-          }
+          },
         ],
       },
     }),
@@ -47,16 +100,14 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ["@mui/x-data-grid"],
   },
-  build: {
-    sourcemap: true,
-  },
-  server:{
-    proxy:{
-      '/api':{
-        target: 'https://softion-api-v3.vercel.app/',
+  build: { sourcemap: true },
+  server: {
+    proxy: {
+      "/api": {
+        target: "https://softion-api-v3.vercel.app/api",
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, '/api')
-      }
+        rewrite: (path) => path.replace(/^\/api/, "/api"),
+      },
     },
-  }
+  },
 });

@@ -66,7 +66,7 @@ function SliderBar({ user, userLoading, workspaces }) {
         }`}
       >
         
-       <Profile imagen={user.profileImagen} setMenu={() => setOpen(false)} text={userLoading? 'Cargando...': `${user.name} ${user.lastName}`} open={open} />
+       <Profile imagen={user} setMenu={() => setOpen(false)} text={userLoading? 'Cargando...': `${user.name} ${user.lastName}`} open={open} />
         
         
       </div>

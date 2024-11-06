@@ -8,9 +8,11 @@
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "test": "testcafe firefox ./tests/test.js",
-    "preview": "vite preview"
+    "preview": "vite preview --host"
   },
   "dependencies": {
+    "@cloudinary/react": "^1.13.1",
+    "@cloudinary/url-gen": "^1.21.0",
     "@ramonak/react-progress-bar": "^5.2.0",
     "@tanstack/query-sync-storage-persister": "^5.59.13",
     "@tanstack/react-query": "^5.29.2",
@@ -28,10 +30,16 @@
     "react-icons": "^5.0.1",
     "react-modal": "^3.16.1",
     "react-router-dom": "^6.22.3",
+    "react-webcam": "^7.2.0",
     "socket.io-client": "^4.8.0",
     "sort-by": "^0.0.2",
     "sweetalert2": "^11.6.13",
-    "universal-cookie": "^7.1.4"
+    "universal-cookie": "^7.1.4",
+    "workbox-core": "^7.3.0",
+    "workbox-expiration": "^7.3.0",
+    "workbox-precaching": "^7.3.0",
+    "workbox-routing": "^7.3.0",
+    "workbox-strategies": "^7.3.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",

@@ -1,39 +1,222 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
+import Webcam from "react-webcam";
+import Swal from "sweetalert2";
+import Cookies from "universal-cookie";
+import { Cloudinary } from '@cloudinary/url-gen';
+import { auto } from '@cloudinary/url-gen/actions/resize';
+import { autoGravity } from '@cloudinary/url-gen/qualifiers/gravity';
+import { AdvancedImage } from '@cloudinary/react';
+import { MdModeEditOutline } from "react-icons/md";
+import { IoMdCloseCircleOutline } from "react-icons/io";
 import {
   Title,
   SubTitle,
   GlobalText,
   SmallText,
+  Text,
 } from "../../atoms/TextsGlobal";
 import { useQueryClient, useQuery } from "@tanstack/react-query";
-import { getQuestion } from "../../api";
+import { getQuestion, getUserData } from "../../api";
 import { useUserContext } from "../../context/UserContext";
-import { HiOutlineCamera } from "react-icons/hi2";
 import { Buttons } from "../../atoms/FormularyItems";
+import { uploadProfileImagen } from "../../api";
 function Profile() {
+  const cookies = new Cookies();
+  const token = cookies.get("x-access-user");
   const { Theme } = useUserContext();
-  const UseQuery = useQueryClient();
-  const [user, setUser] = useState(UseQuery.getQueryData(["userData"]));
+
+  const [ImagenUrl, setImagenUrl] = useState(null);
+  const [isUpload, setIsUpload] = useState(false);
+  const [isPhoto, setIsPhoto] = useState(false);
+  const [devices, setDevices] = useState([]);
+  const [camSelected, setCamSelected] = useState(null);
+  const [image, setImage] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [ShowWebcam, setShowWebcam] = useState(false);
   const [PassUpdate, setPassUdpate] = useState(false);
   const [isEditing, setEditing] = useState(false);
-  const texto = "hola";
+  const queryClient = useQueryClient();
 
-  const { data, isLoader } = useQuery({
-    queryFn: () => getQuestion(user.user.questionKey),
-    queryKey: ["question"],
-  });
+  const cld = new Cloudinary({ cloud: { cloudName: 'dhuutno2p' } });
+
+  const [user , setUser] = useState(null);
+
+
+  const handleDevices = useCallback((mediaDevices) => {
+    setDevices(mediaDevices.filter(({ kind }) => kind === 'videoinput'));
+  }, [setDevices]);
+
+  useEffect(() => {
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      navigator.mediaDevices.enumerateDevices().then(handleDevices);
+    } else {
+      console.log('La enumeración de dispositivos no está permitida en direcciones IP.');
+    }
+  }, [handleDevices]);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const datas =  queryClient.getQueryData(["userData"]);
+      setUser(datas);
+      console.log(datas)
+    };
+    fetchUserData();
+  }, [token]);
+ 
+
+  const handleImageUpload = (event) => {
+    if (event.target.files && event.target.files[0]) {
+      setIsPhoto(false);
+      setImage(event.target.files[0])
+    }
+  }
+
+  const handleUpload = async () => {
+    if(!image){
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Por favor, selecciona una imagen',
+      })
+      return
+    }
+
+    if (isPhoto) {
+      const result = await uploadProfileImagen(token, image);
+      setImagenUrl(result.url);
+      Swal.fire({
+        icon: 'success',
+        title: '¡Listo!',
+        text: 'Tu imagen de perfil ha sido actualizada',
+      })
+      setImage(null);
+      setShowModal(false);
+      
+    setIsUpload(true);
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.readAsDataURL(image);
+
+    reader.onload = async () => {
+      const base64String = reader.result;
+      try{  
+        const result = await uploadProfileImagen(token, base64String);
+        setImagenUrl(result.url);
+        Swal.fire({
+          icon: 'success',
+          title: '¡Listo!',
+          text: 'Tu imagen de perfil ha sido actualizada',
+        })
+        setImage(null);
+        setShowModal(false);
+        
+    setIsUpload(true);
+      }catch(error){
+        console.log(error)
+      }
+    };
+    
+    setIsUpload(false);
+    await queryClient.invalidateQueries(["userData"]);
+  }
+
+  useEffect(() => {
+    if (user) {
+      setImagenUrl(user.user.profileImage);
+    }
+  }, [isUpload]);
 
   return (
-    <div className="w-4/6 mx-auto  h-full justify-center items-center p-5 flex">
+    user  === null ? <div>Cargando...</div> :
+    <div className="w-5/6 mx-auto  h-[90vh  ] justify-center items-center p-5 flex">
       <div className={`p-10 w-full flex flex-col items-center`}>
         <div className=" rounded-full p-3 border-b-4 relative -mb-14 ">
-          <img
-            src="/images/Profile/profile.jpg"
-            alt=""
-            className={`w-44 h-44 rounded-full text-white`}
-          />
-          <HiOutlineCamera className=" cursor-pointer w-10 h-10 rounded-full p-2 bg-black text-white bottom-0 right-0 absolute " />
+        <AdvancedImage cldImg={cld
+  .image(user.user.profileImage)
+  .format('auto')
+  .quality('auto')
+  .resize(auto().gravity(autoGravity()).width(500).height(500))} className={`w-44 h-44 rounded-full text-white`}/>
+          <MdModeEditOutline onClick={() => setShowModal(true)} className=" cursor-pointer w-10 h-10 rounded-full p-2 bg-black text-white bottom-0 right-0 absolute " />
         </div>
+
+        {
+          showModal ? (
+            <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center z-10 bg-black bg-opacity-50">
+              <div className="bg-white w-1/3 p-5 rounded-lg">
+                <div className="flex justify-between">
+                  <SubTitle text="Editar Foto de Perfil" />
+                  <IoMdCloseCircleOutline onClick={() => [setShowModal(false) , setImage(null)]} className="cursor-pointer w-10 h-10 rounded-full bg-red-500 text-white" />
+                </div>
+                <div className=" flex w-full items-center justify-evenly flex-col">
+                  <div className=" w-full flex flex-col py-3 items-center border-b-2 ">
+                    <SubTitle text="Seleccionar una imagen" />
+                    <input onChange={handleImageUpload} type="file" name="" id="" className=" w-full mt-2 p-2 rounded-lg border-2 " />
+                  </div>
+                  <div className=" w-full px-5 ">
+                    {
+                      image ? (
+                        <div className=" w-full p-2 rounded-lg border-2 ">
+                          <img src={ isPhoto ? image :  URL.createObjectURL(image)} alt="" className="w-full h-full" />
+                        </div>
+                      ) : null
+                    }
+                  </div>
+                  <div className=" w-full px-5 ">
+                    <button onClick={() => setShowWebcam(true)} className=" w-full p-2 rounded-lg border-2 bg-blue-500 text-white "> Tomar una Foto </button>
+                  </div>
+                  <div className=" w-full px-5 ">
+                    <button onClick={handleUpload} className=" w-full p-2 rounded-lg border-2 bg-green-500 text-white "> Guardar </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : null
+        }
+
+        {
+          ShowWebcam ? (
+            <div className="fixed top-0 left-0 w-full h-screen flex justify-center items-center z-10 bg-black bg-opacity-50">
+              <div className="bg-white w-1/3 p-5 rounded-lg">
+                <div className="flex justify-between">
+                  <SubTitle text="Tomar Foto" />
+                  <IoMdCloseCircleOutline onClick={() => setShowWebcam(false)} className="cursor-pointer w-10 h-10 rounded-full bg-red-500 text-white" />
+                </div>
+                <div className=" flex w-full items-center justify-center flex-col">
+                  <Webcam audio={false} videoConstraints={{ deviceId: camSelected}} screenshotFormat="image/jpeg">
+                  {({ getScreenshot }) => (
+                <button
+                  onClick={() => {
+                    setIsPhoto(true);
+                    setShowWebcam( false )
+                    const imageSrc = getScreenshot()
+                    setImage(imageSrc);
+                  }}
+                  className="px-4 py-2 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full max-w-xs mt-2"
+                >
+                  Capturar foto
+                </button>
+              )}
+                  </Webcam>
+                </div>
+                <div className=" w-full py-2">
+                  <Text text="Dispositivos de captura" />
+                  <select onChange={(e) => setCamSelected(e.target.value)} className="w-full border-2 border-gray-100 rounded-xl p-4 mt-1 bg-transparent">
+                    {devices.map((device) => (
+                      <option key={device.deviceId} value={device.deviceId}>
+                        {device.label}
+                      </option>
+                    ))}
+                  </select>
+                
+                </div>
+                <button className=" w-full p-2 rounded-lg border-2 bg-red-500 text-white "  onClick={() => setShowWebcam(false)} > Cancelar </button>
+              </div>
+            </div>
+          ) : null
+        }
+
         <div
           className={` ${
             Theme ? " border-2 border-gray-700 " : "bg-gray-100"

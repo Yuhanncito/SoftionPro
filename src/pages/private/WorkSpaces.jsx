@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { createNewProject, deleteProject} from "../../api";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { SmallText, SubTitle, Text, Title } from "../../atoms/TextsGlobal";
 import { Buttons } from "../../atoms/FormularyItems";
-import { ProjectsMoleculeCard, WorkspacesMoleculeCard } from "../../molecules/WorkspacesMolecule";
+import { ProjectsMoleculeCard } from "../../molecules/WorkspacesMolecule";
 import { FormsImputs } from "../../molecules/FormsImputs";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useUserContext } from "../../context/UserContext";
@@ -13,16 +13,14 @@ import Swal from "sweetalert2";
 
 import { useForm } from "react-hook-form";
 import Cookies from "universal-cookie";
-import ModalProject from "../../organisms/ModalProject";
 import ModalSendInvitation from "../../organisms/ModalSendInvitation";
 
 
-function WorkSpaces({params}) {
+function WorkSpaces() {
 
   const navigate = useNavigate();
   const cookie = new Cookies();
   const queryClient = useQueryClient();
-  const [openModalProject, setOpenModalProject] = useState(false)
   const [openModalSendInvitation, setOpenModalSendInvitation] = useState(false)
 
   const token = cookie.get('x-access-user');
@@ -81,7 +79,7 @@ function WorkSpaces({params}) {
       })
       await queryClient.invalidateQueries(["workspaces"]);
     },
-    onError: async (e) => {
+    onError: async () => {
       Swal.fire({
         icon: "error",
         title: "Proyecto no creado",
