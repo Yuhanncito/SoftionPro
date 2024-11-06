@@ -16,7 +16,7 @@ export function LoginForms({
   ) : (
     <div className="bg-white px-10 py-14 md:w-[600px] rounded-3xl shadow-xl border-2 border-gray-100">
       <div className=" flex w-full items-center md:flex-row flex-col">
-        <img src="/Logo.svg" alt="" className=" w-20 mr-4" />
+        <img src="images/logo.png" alt="" className=" w-20 mr-4" />
         <div className="w-full md:mt-0 mt-2">
           <Title text="Bienvenido a" />
           <SubTitle text="Softion Pro" />

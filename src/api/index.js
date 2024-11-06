@@ -1,7 +1,7 @@
 const BASEURL0 = 'https://proto-api2-0.vercel.app/api'
-const BASEURL2 = 'https://softion-api-v3.vercel.app/api'
+const BASEURL = 'https://softion-api-v3.vercel.app/api'
 const BASEURL1 = 'http://srv554337.hstgr.cloud:4000/api'
-const BASEURL = 'http://localhost:4000/api'
+const BASEURL2 = 'http://localhost:4000/api'
 
 export default BASEURL;
 
@@ -421,3 +421,24 @@ export const updatePassword = async (user, data) => {
         return {}
     }
 }  
+
+export const uploadProfileImagen = async (user, base64String) => {
+    try {
+        const response = await fetch(BASEURL+'/auth/update/', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-access-token': user
+          },
+          body: JSON.stringify({ imagen: base64String })
+        });
+        const data = await response.json();
+        console.log(data);
+        
+        return data.status === 'ok' ?  { success: true, url: data.public_id } : { success: false, url: null };
+
+      } catch (error) {
+        console.log(error);
+        return { success: false, url: null };
+      }
+}
