@@ -1,7 +1,7 @@
 const PUBLICKEY = "BBeSyh4-JimNpNCTwdyyUBujq1iaIoOby-Kqk8yv_GE7JAjOf8LU8xJVT9poP3Ccch0Q8IugJsGQVUnoojAxSXo";
 
-const Url = 'http://localhost:4000/api/test';
-const Url2 = 'https://softion-api-v3.vercel.app/api/test';
+const Url2 = 'http://localhost:4000/api/test';
+const Url = 'https://softion-api-v3.vercel.app/api/test';
 
 function urlBase64ToUint8Array(base64String) {
   const padding = "=".repeat((4 - (base64String.length % 4)) % 4);

@@ -1,7 +1,7 @@
 const BASEURL0 = 'https://proto-api2-0.vercel.app/api'
-const BASEURL2 = 'https://softion-api-v3.vercel.app/api'
+const BASEURL = 'https://softion-api-v3.vercel.app/api'
 const BASEURL1 = 'http://srv554337.hstgr.cloud:4000/api'
-const BASEURL = 'http://localhost:4000/api'
+const BASEURL2 = 'http://localhost:4000/api'
 
 export default BASEURL;
 
