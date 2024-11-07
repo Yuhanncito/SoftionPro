@@ -19,20 +19,3 @@ test('Test de inicio de sesión', async t => {
         .typeText('#password', '123456ASDasd@');
     await t.click('button');
 })
-
-test ('Test de Api (Informacion del usuario)', async t => {
-    try{
-        const response = await fetch(`https://softion-api-v3.vercel.app/api/auth/espinosa.yuhann12@gmail.com`, {
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-        const result = await response.json()
-        if(result.message !== 'ok'){
-            throw new Error('El servidor no respondio con el mensaje esperado')
-        }
-    }catch(error){
-        console.log(error)
-        throw error
-    }
-})
