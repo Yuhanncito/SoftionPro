@@ -46,6 +46,10 @@ function Profile() {
     setDevices(mediaDevices.filter(({ kind }) => kind === 'videoinput'));
   }, [setDevices]);
 
+  const handleReloadDevices = useCallback(() => {
+    navigator.mediaDevices.enumerateDevices().then(handleDevices);
+  }, [handleDevices]);
+
   useEffect(() => {
     if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
       navigator.mediaDevices.enumerateDevices().then(handleDevices);
@@ -210,6 +214,9 @@ function Profile() {
                     ))}
                   </select>
                 
+                <div className=" w-full  ">
+                  <button className=" w-full p-2 rounded-lg border-2 bg-green-500 text-white " onClick={handleReloadDevices} > Recargar Cámaras </button>
+                </div>
                 </div>
                 <button className=" w-full p-2 rounded-lg border-2 bg-red-500 text-white "  onClick={() => setShowWebcam(false)} > Cancelar </button>
               </div>
