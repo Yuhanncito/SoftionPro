@@ -43,7 +43,7 @@ const ProfileName = ({ text, hidden }) => {
 const GlobalText = ({ text, color }) => {
 
     return (
-        <p className={` max-sm:hidden max-sm:text-xs text-sm font-semibold text-${color}`}>{text}</p>
+        <p className={` max-sm:text-xs text-sm font-semibold text-${color}`}>{text}</p>
     );
 }
 

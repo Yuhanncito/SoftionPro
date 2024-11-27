@@ -81,6 +81,11 @@ function LayoutPrivate() {
     },
   });
 
+  const deleteUser = () => {
+    cookie.remove("x-access-user");
+    redirectPage("/");
+  };
+
   const handleVerify = async (token, email) => {
     !token && !email ? redirectPage("/") : null;
     token ? setIsTooken(true) : setIsTooken(false);
@@ -148,8 +153,14 @@ const handleDestroy = () => {
 };
 
   return token ?  (
-    (isLoadingWorkspaces || isLoading) ? (
-      <LoadingMolecule />
+    (isLoadingWorkspaces || isLoading || isLoadingInvitations) ? (
+      <LoadingMolecule>
+        {
+          isErrorUser? (
+            deleteUser()
+          ) : null
+        }
+      </LoadingMolecule>
     ) :  (
       <div
         className={` transition-all duration-1000 w-screen h-screen flex flex-row ${
@@ -181,7 +192,7 @@ const handleDestroy = () => {
                   onClick={() => setOpenInvitation(!OpenInvitation)}
                 >
                   <IoIosNotificationsOutline className="w-8 h-8 mr-5" />
-                  {invitations && invitations.invitations.length > 0 ? (
+                  {invitations &&  isLoadingInvitations && isSuccessInvitations && invitations.invitations && invitations.invitations.length > 0 ? (
                     <div className=" absolute top-1 rounded-full bg-red-400 text-white w-4 h-4 items-center"></div>
                   ) : null}
 
