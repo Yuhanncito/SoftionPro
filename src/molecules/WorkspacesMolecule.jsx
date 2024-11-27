@@ -1,6 +1,6 @@
 import React from "react";
 import { MdWorkspaces } from "react-icons/md";
-import { GlobalText } from "../atoms/TextsGlobal";
+import { GlobalText, SmallText, Text } from "../atoms/TextsGlobal";
 import { FaFolder } from "react-icons/fa";
 import { useState } from "react";
 import { CiFolderOn } from "react-icons/ci";
@@ -45,15 +45,23 @@ export const WorkspacesMoleculeCard = ({ findPrivilege , workspaces, color, them
   return (
     <div
       onClick={() => {findPrivilege(workspaces, rute)}}
-      className={`flex max-h-20 shadow-xl rounded-lg border w-11/12 mx-5 transition-all cursor-pointer items-center flex-row px-6 py-2 ${ theme? 'bg-slate-800':'bg-white' }`}
+      className={`flex flex-row max-h-20 shadow-xl rounded-lg border w-11/12 mx-5 transition-all cursor-pointer items-center px-6 py-2 ${ theme? 'bg-slate-800':'bg-white' }`}
     >
-      <CiFolderOn className="w-6 h-6  mr-2" />
+      
+      <CiFolderOn className="w-10 h-10  mr-2" />
+      <div className="w-full flex flex-col mt-2 justify-center items-center">
       <GlobalText
         text={`${
           workspaces.workSpaceName.slice(0, 18) +
           (workspaces.workSpaceName.length > 18 ? "..." : "")
         } de ${workspaces.propetaryUser.name}`}
       />
+      
+      <div className="w-full border-b-2 my-1 "></div>
+
+      <SmallText color={'-blue-500'} text={workspaces.propetaryUser.email} />
+    </div>
+      
     </div>
   );
 };
